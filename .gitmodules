@@ -1,0 +1,3 @@
+[submodule "createrepo_c"]
+	path = createrepo_c
+	url = https://github.com/rpm-software-management/createrepo_c.git
