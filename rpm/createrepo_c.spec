@@ -22,6 +22,7 @@ BuildRequires:  xz-devel
 BuildRequires:  zlib-devel
 Requires:       %{name}-libs =  %{version}-%{release}
 Requires:       rpm >= 4.8.0-28
+Obsoletes:      python2-%{name} <= 0.10.0+git1
 
 %description
 C implementation of Createrepo.
@@ -44,30 +45,21 @@ Requires:   %{name}-libs%{?_isa} = %{version}-%{release}
 This package contains the createrepo_c C library and header files.
 These development files are for easy manipulation with a repodata.
 
-%package -n python2-%{name}
-Summary:        Python bindings for the createrepo_c library
-BuildRequires:  python2-devel
-BuildRequires:  python-sphinx
-Requires:       %{name}-libs = %{version}-%{release}
 
-%description -n python2-%{name}
-Python bindings for the createrepo_c library.
 
 %prep
 %setup -q -n %{name}-%{version}
 mkdir createrepo_c/build
 
 %build
-# Build createrepo_c with Python 2
 pushd createrepo_c/build
-  %cmake ../
+  %cmake .. -DENABLE_PYTHON=OFF
   make %{?_smp_mflags} RPM_OPT_FLAGS="%{optflags}"
 popd
 
 %install
 
 pushd createrepo_c/build
-  # Install createrepo_c with Python 2
   make install DESTDIR=%{buildroot}
   # Remove unused files
   rm %{buildroot}/etc/bash_completion.d/createrepo_c.bash
@@ -99,7 +91,4 @@ popd
 %{_libdir}/lib%{name}.so
 %{_libdir}/pkgconfig/%{name}.pc
 %{_includedir}/%{name}/
-
-%files -n python2-%{name}
-%{_libdir}/python2.7/site-packages/%{name}
 
