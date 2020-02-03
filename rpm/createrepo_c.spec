@@ -45,25 +45,35 @@ Requires:   %{name}-libs%{?_isa} = %{version}-%{release}
 This package contains the createrepo_c C library and header files.
 These development files are for easy manipulation with a repodata.
 
+%package doc
+Summary:   Readme for %{name}
+Requires:  %{name} = %{version}-%{release}
+BuildArch: noarch
 
+%description doc
+%{summary}.
 
 %prep
-%setup -q -n %{name}-%{version}
-mkdir createrepo_c/build
+%setup -q -n %{name}-%{version}/createrepo_c
+mkdir -p build
 
 %build
-pushd createrepo_c/build
+pushd build
   %cmake .. -DENABLE_PYTHON=OFF
   make %{?_smp_mflags} RPM_OPT_FLAGS="%{optflags}"
 popd
 
 %install
 
-pushd createrepo_c/build
+pushd build
   make install DESTDIR=%{buildroot}
   # Remove unused files
   rm %{buildroot}/etc/bash_completion.d/createrepo_c.bash
 popd
+
+# Copy readme to document directory
+mkdir -p %{buildroot}%{_docdir}/%{name}-%{version}
+install -m0644 -t %{buildroot}%{_docdir}/%{name}-%{version}/ README.md
 
 %post -n %{name}-libs -p /sbin/ldconfig
 
@@ -71,7 +81,6 @@ popd
 
 %files
 %defattr(-,root,root,-)
-%doc %{name}/README.md
 %{_bindir}/createrepo_c
 %{_bindir}/mergerepo_c
 %{_bindir}/modifyrepo_c
@@ -79,7 +88,7 @@ popd
 
 %files libs
 %defattr(-,root,root,-)
-%doc %{name}/COPYING
+%license COPYING
 %{_libdir}/lib%{name}.so.*
 
 %files devel
@@ -92,3 +101,6 @@ popd
 %{_libdir}/pkgconfig/%{name}.pc
 %{_includedir}/%{name}/
 
+%files doc
+%defattr(-,root,root,-)
+%{_docdir}/%{name}-%{version}
