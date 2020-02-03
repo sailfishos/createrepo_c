@@ -22,6 +22,7 @@ BuildRequires:  xz-devel
 BuildRequires:  zlib-devel
 Requires:       %{name}-libs =  %{version}-%{release}
 Requires:       rpm >= 4.8.0-28
+Obsoletes:      python2-%{name} <= 0.10.0+git1
 
 %description
 C implementation of Createrepo.
@@ -44,34 +45,35 @@ Requires:   %{name}-libs%{?_isa} = %{version}-%{release}
 This package contains the createrepo_c C library and header files.
 These development files are for easy manipulation with a repodata.
 
-%package -n python2-%{name}
-Summary:        Python bindings for the createrepo_c library
-BuildRequires:  python2-devel
-BuildRequires:  python-sphinx
-Requires:       %{name}-libs = %{version}-%{release}
+%package doc
+Summary:   Readme for %{name}
+Requires:  %{name} = %{version}-%{release}
+BuildArch: noarch
 
-%description -n python2-%{name}
-Python bindings for the createrepo_c library.
+%description doc
+%{summary}.
 
 %prep
-%setup -q -n %{name}-%{version}
-mkdir createrepo_c/build
+%setup -q -n %{name}-%{version}/createrepo_c
+mkdir -p build
 
 %build
-# Build createrepo_c with Python 2
-pushd createrepo_c/build
-  %cmake ../
+pushd build
+  %cmake .. -DENABLE_PYTHON=OFF
   make %{?_smp_mflags} RPM_OPT_FLAGS="%{optflags}"
 popd
 
 %install
 
-pushd createrepo_c/build
-  # Install createrepo_c with Python 2
+pushd build
   make install DESTDIR=%{buildroot}
   # Remove unused files
   rm %{buildroot}/etc/bash_completion.d/createrepo_c.bash
 popd
+
+# Copy readme to document directory
+mkdir -p %{buildroot}%{_docdir}/%{name}-%{version}
+install -m0644 -t %{buildroot}%{_docdir}/%{name}-%{version}/ README.md
 
 %post -n %{name}-libs -p /sbin/ldconfig
 
@@ -79,7 +81,6 @@ popd
 
 %files
 %defattr(-,root,root,-)
-%doc %{name}/README.md
 %{_bindir}/createrepo_c
 %{_bindir}/mergerepo_c
 %{_bindir}/modifyrepo_c
@@ -87,7 +88,7 @@ popd
 
 %files libs
 %defattr(-,root,root,-)
-%doc %{name}/COPYING
+%license COPYING
 %{_libdir}/lib%{name}.so.*
 
 %files devel
@@ -100,6 +101,6 @@ popd
 %{_libdir}/pkgconfig/%{name}.pc
 %{_includedir}/%{name}/
 
-%files -n python2-%{name}
-%{_libdir}/python2.7/site-packages/%{name}
-
+%files doc
+%defattr(-,root,root,-)
+%{_docdir}/%{name}-%{version}
