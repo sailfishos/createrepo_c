@@ -62,7 +62,7 @@ pushd build
   export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64"
   export CXXFLAGS="$CXXFLAGS -D_FILE_OFFSET_BITS=64"
   export CPPFLAGS="$CPPFLAGS -D_FILE_OFFSET_BITS=64"
-  %cmake .. -DENABLE_PYTHON=OFF
+  %cmake .. -DENABLE_PYTHON=OFF -DWITH_ZCHUNK=OFF
   make %{?_smp_mflags} RPM_OPT_FLAGS="%{optflags}"
 popd
 
