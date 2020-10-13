@@ -70,8 +70,6 @@ popd
 
 pushd build
   make install DESTDIR=%{buildroot}
-  # Remove unused files
-  rm %{buildroot}/etc/bash_completion.d/createrepo_c.bash
 popd
 
 # Copy readme to document directory
