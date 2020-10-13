@@ -1,6 +1,6 @@
 Summary:        Creates a common metadata repository
 Name:           createrepo_c
-Version:        0.10.0
+Version:        0.12.0
 Release:        1
 License:        GPLv2+
 URL:            https://github.com/rpm-software-management/createrepo_c
@@ -62,7 +62,7 @@ pushd build
   export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64"
   export CXXFLAGS="$CXXFLAGS -D_FILE_OFFSET_BITS=64"
   export CPPFLAGS="$CPPFLAGS -D_FILE_OFFSET_BITS=64"
-  %cmake .. -DENABLE_PYTHON=OFF
+  %cmake .. -DENABLE_PYTHON=OFF -DWITH_ZCHUNK=OFF
   make %{?_smp_mflags} RPM_OPT_FLAGS="%{optflags}"
 popd
 
@@ -70,8 +70,6 @@ popd
 
 pushd build
   make install DESTDIR=%{buildroot}
-  # Remove unused files
-  rm %{buildroot}/etc/bash_completion.d/createrepo_c.bash
 popd
 
 # Copy readme to document directory
