@@ -3,7 +3,7 @@ Name:           createrepo_c
 Version:        0.12.0
 Release:        1
 License:        GPLv2+
-URL:            https://github.com/rpm-software-management/createrepo_c
+URL:            https://github.com/sailfishos/createrepo_c
 Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  cmake
