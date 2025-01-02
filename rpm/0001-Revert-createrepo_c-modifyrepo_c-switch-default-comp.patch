@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@jolla.com>
+Date: Thu, 2 Jan 2025 17:00:00 +0200
+Subject: [PATCH] Revert "createrepo_c, modifyrepo_c: switch default
+ compression to zstd"
+
+This reverts commit ae64bf2da1260b0fbd851c6db4892506906cebe7.
+---
+ src/createrepo_c.c      | 6 +++---
+ src/modifyrepo_shared.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/createrepo_c.c b/src/createrepo_c.c
+index 2faeb008904d551a7d8781d69d7646d98906ac39..542530e4badcb50a1f6f4e469a8ad200fe6941cd 100644
+--- a/src/createrepo_c.c
++++ b/src/createrepo_c.c
+@@ -827,9 +827,9 @@ main(int argc, char **argv)
+     const char *xml_compression_suffix = NULL;
+     const char *sqlite_compression_suffix = NULL;
+     const char *compression_suffix = NULL;
+-    cr_CompressionType xml_compression = CR_CW_ZSTD_COMPRESSION;
++    cr_CompressionType xml_compression = CR_CW_GZ_COMPRESSION;
+     cr_CompressionType sqlite_compression = CR_CW_BZ2_COMPRESSION;
+-    cr_CompressionType compression = CR_CW_ZSTD_COMPRESSION;
++    cr_CompressionType compression = CR_CW_GZ_COMPRESSION;
+ 
+     if (cmd_options->compatibility) {
+         xml_compression    = CR_CW_GZ_COMPRESSION;
+@@ -1033,7 +1033,7 @@ main(int argc, char **argv)
+     gchar *oth_xml_filename = NULL;
+ 
+     g_message("Temporary output repo path: %s", tmp_out_repo);
+-    g_debug("Creating .xml.%s files", xml_compression_suffix);
++    g_debug("Creating .xml.gz files");
+ 
+     pri_xml_filename = g_strconcat(tmp_out_repo, "/primary.xml", xml_compression_suffix, NULL);
+     fil_xml_filename = g_strconcat(tmp_out_repo, "/filelists.xml", xml_compression_suffix, NULL);
+diff --git a/src/modifyrepo_shared.c b/src/modifyrepo_shared.c
+index 233bb03c15496b5f67d6b237cc73b339caf279e3..674e7fe92cf0fd4c88fbbef4f2014a8fcf9d3316 100644
+--- a/src/modifyrepo_shared.c
++++ b/src/modifyrepo_shared.c
+@@ -31,7 +31,7 @@
+ #include "xml_dump.h"
+ 
+ #define ERR_DOMAIN              CREATEREPO_C_ERROR
+-#define DEFAULT_COMPRESSION     CR_CW_ZSTD_COMPRESSION
++#define DEFAULT_COMPRESSION     CR_CW_GZ_COMPRESSION
+ #define DEFAULT_CHECKSUM        CR_CHECKSUM_SHA256
+ 
+ cr_ModifyRepoTask *
