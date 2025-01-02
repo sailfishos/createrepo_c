@@ -1,10 +1,11 @@
 Summary:        Creates a common metadata repository
 Name:           createrepo_c
-Version:        0.12.0
+Version:        1.2.0
 Release:        1
 License:        GPLv2+
 URL:            https://github.com/sailfishos/createrepo_c
 Source0:        %{name}-%{version}.tar.gz
+Patch1:         0001-Revert-createrepo_c-modifyrepo_c-switch-default-comp.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc
@@ -54,23 +55,17 @@ BuildArch: noarch
 %{summary}.
 
 %prep
-%setup -q -n %{name}-%{version}/createrepo_c
-mkdir -p build
+%autosetup -p1 -n %{name}-%{version}/createrepo_c
 
 %build
-pushd build
-  export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64"
-  export CXXFLAGS="$CXXFLAGS -D_FILE_OFFSET_BITS=64"
-  export CPPFLAGS="$CPPFLAGS -D_FILE_OFFSET_BITS=64"
-  %cmake .. -DENABLE_PYTHON=OFF -DWITH_ZCHUNK=OFF
-  make %{?_smp_mflags} RPM_OPT_FLAGS="%{optflags}"
-popd
+export CFLAGS="$CFLAGS -D_FILE_OFFSET_BITS=64"
+export CXXFLAGS="$CXXFLAGS -D_FILE_OFFSET_BITS=64"
+export CPPFLAGS="$CPPFLAGS -D_FILE_OFFSET_BITS=64"
+%cmake -DENABLE_PYTHON=OFF -DWITH_LIBMODULEMD=OFF -DWITH_ZCHUNK=OFF
+%cmake_build
 
 %install
-
-pushd build
-  make install DESTDIR=%{buildroot}
-popd
+%cmake_install
 
 # Copy readme to document directory
 mkdir -p %{buildroot}%{_docdir}/%{name}-%{version}
@@ -81,19 +76,16 @@ install -m0644 -t %{buildroot}%{_docdir}/%{name}-%{version}/ README.md
 %postun -n %{name}-libs -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %{_bindir}/createrepo_c
 %{_bindir}/mergerepo_c
 %{_bindir}/modifyrepo_c
 %{_bindir}/sqliterepo_c
 
 %files libs
-%defattr(-,root,root,-)
 %license COPYING
 %{_libdir}/lib%{name}.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_mandir}/man8/createrepo_c.8*
 %{_mandir}/man8/mergerepo_c.8*
 %{_mandir}/man8/modifyrepo_c.8*
@@ -103,5 +95,4 @@ install -m0644 -t %{buildroot}%{_docdir}/%{name}-%{version}/ README.md
 %{_includedir}/%{name}/
 
 %files doc
-%defattr(-,root,root,-)
 %{_docdir}/%{name}-%{version}
