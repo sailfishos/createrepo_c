@@ -1,11 +1,13 @@
 Summary:        Creates a common metadata repository
 Name:           createrepo_c
-Version:        1.2.0
+Version:        1.2.1
 Release:        1
 License:        GPLv2+
 URL:            https://github.com/sailfishos/createrepo_c
 Source0:        %{name}-%{version}.tar.gz
 Patch1:         0001-Revert-createrepo_c-modifyrepo_c-switch-default-comp.patch
+Patch2:         0002-Use-IMPORTED_TARGET-for-3rd-party-dependencies.patch
+Patch3:         0003-Don-t-try-to-use-imported-targets-of-turned-off-depe.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc
