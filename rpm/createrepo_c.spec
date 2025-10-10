@@ -10,7 +10,6 @@ Patch2:         0002-Use-IMPORTED_TARGET-for-3rd-party-dependencies.patch
 Patch3:         0003-Don-t-try-to-use-imported-targets-of-turned-off-depe.patch
 
 BuildRequires:  cmake
-BuildRequires:  gcc
 BuildRequires:  bzip2-devel
 BuildRequires:  doxygen
 BuildRequires:  expat-devel
@@ -23,6 +22,7 @@ BuildRequires:  rpm-devel >= 4.8.0-28
 BuildRequires:  sqlite-devel
 BuildRequires:  xz-devel
 BuildRequires:  zlib-devel
+BuildRequires:  libzstd-devel
 Requires:       %{name}-libs =  %{version}-%{release}
 Requires:       rpm >= 4.8.0-28
 Obsoletes:      python2-%{name} <= 0.10.0+git1
